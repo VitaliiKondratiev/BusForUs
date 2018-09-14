@@ -1,0 +1,19 @@
+<!-- TAB BUS MANAGMENT-->
+<aura:component controller="BusLineController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+
+    <aura:attribute name="busesForMan" type="List" />
+    <aura:attribute name="allLines" type="List" />
+    <aura:attribute name="recordId" type="String" />
+
+    <aura:handler name="init" action="{!c.doInitBuses}" value="{!this}" />
+    <aura:handler event="c:editInfo" action="{!c.handleEditInfoEvent}" />
+    
+    <!--Page content start -->
+
+    <aura:iteration items="{!v.busesForMan}" var="bus" indexVar="key">
+        <lightning:card class="slds-card_boundary slds-col slds-size_1-of-2 ">
+            <c:BusInfo listLines="{!v.allLines}" currentBus="{!bus}" />
+        </lightning:card>
+    </aura:iteration>
+
+</aura:component>

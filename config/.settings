@@ -1,0 +1,19 @@
+{
+    "projectName": "BusForUs",
+    "username": "vitalii@kondratiev.com",
+    "id": "97aabc00-b683-11e8-a9c0-3fa45fc44ad8",
+    "namespace": "",
+    "orgType": "developer",
+    "loginUrl": "https://login.salesforce.com/",
+    "instanceUrl": "https://bus-line-dev-ed.my.salesforce.com",
+    "workspace": "C:\\Users\\vkondratiev\\Documents\\SFDC Workspace",
+    "subscription": [
+        "ApexClass",
+        "ApexComponent",
+        "ApexPage",
+        "ApexTrigger",
+        "AuraDefinitionBundle",
+        "CustomObject",
+        "StaticResource"
+    ]
+}

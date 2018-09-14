@@ -1,0 +1,119 @@
+<aura:component controller="BusController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
+
+    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo" />
+
+    <aura:attribute name="buses" type="List" />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="availableSearch" type="Boolean" />
+    <aura:attribute name="totalBuses" type="Integer" />
+    <aura:attribute name="isOpen" type="boolean" default="false" />
+    <aura:attribute name="newName" type="String" />
+
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+    <aura:handler event="c:editInfo" action="{!c.handleEditInfoEvent}" />
+
+    <!--Page content start -->
+    <lightning:card title="{!'Count of buses in your bus depot: '+ v.totalBuses }" class="slds-card ">
+        <lightning:input class="slds-p-around--small" 
+                         type="toggle"
+                         label="Show"
+                         name="availableSearcher"
+                         checked="{!v.availableSearch}"
+                         messageToggleActive="Available"
+                         messageToggleInactive="In Use"
+                         onchange="{!c.doInit}" />
+        <!--###### LIST START######-->
+        <aura:iteration items="{!v.buses}" var="bus" indexVar="key">
+            <lightning:card class="slds-card_boundary slds-m-bottom_medium slds-col slds-size_1-of-4 ">
+                <c:BusesListRecord bus="{!bus}" />
+                <aura:if isTrue="{! bus.isEditing}">
+                    <div class="slds-grid">
+                        <lightning:input label="New Bus Name"
+                                         value="{!bus.name}"
+                                         name="newBusName"
+                                         class="slds-col slds-size_1-of-2 slds-m-left_medium "
+                                         required="true" />
+
+                        <lightning:button class="slds-col slds-size_1-of-4 slds-m-left_medium  slds-m-top_medium"
+                                         label="Confirm"
+                                         value="{!key}"
+                                         iconName="utility:check" 
+                                         iconPosition="left" 
+                                         variant="brand" 
+                                         onclick="{! c.confirmUpdate }" />
+                    </div>
+                    <lightning:button aura:id="toToggle" 
+                                     class="slds-m-top_medium slds-m-left_medium" 
+                                     label="Cancel " 
+                                     value="{!key}"
+                                     iconName="utility:edit"
+                                     iconPosition="left" 
+                                     onclick="{! c.toggleShow }"/>
+
+                    <aura:set attribute="else">
+                    <lightning:button aura:id="toToggle"
+                                        class="slds-m-top_medium slds-m-left_medium"
+                                        label="Edit" value="{!key}"
+                                        iconName="utility:edit"
+                                        iconPosition="left"
+                                        variant="brand"
+                                        onclick="{! c.toggleShow }"  />
+                    </aura:set>
+                </aura:if>
+                    <lightning:button class="slds-m-top_medium "
+                                      label="Delete"
+                                      value="{!key}"
+                                      iconName="utility:delete"
+                                      iconPosition="left"
+                                      variant="destructive"
+                                      onclick="{! c.busDelete }" />
+            </lightning:card>
+        </aura:iteration>
+        <!--###### LIST FINISH ######-->
+        <lightning:button class="slds-m-top_medium"
+                          variant="brand"
+                          label="Add new bus"
+                          title="Add new bus"
+                          onclick="{! c.openModel }" />
+    </lightning:card>
+    <div class="slds-m-around_xx-large">
+        <aura:if isTrue="{!v.isOpen}">
+            <!--###### MODAL BOX Start######-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
+                class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- ###### MODAL BOX HEADER Start ######-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              class="slds-modal__close" 
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              onclick="{! c.closeModel }"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add new bus</h2>
+                    </header>
+                    <!--###### MODAL BOX BODY Part Start######-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <form class="slds-form--stacked">
+                            <lightning:input aura:id="newBus" label="New Bus" name="newBusName" value="{! v.newName}"
+                                required="true" />
+                        </form>
+                    </div>
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.closeModel }" />
+                        <lightning:button variant="brand"
+                                          label="Add new bus"
+                                          title="Add new bus"
+                                          onclick="{! c.createNewBus }" />
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######-->
+
+        </aura:if>
+    </div>
+</aura:component>

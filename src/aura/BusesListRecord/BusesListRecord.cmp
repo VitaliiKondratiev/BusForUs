@@ -1,0 +1,18 @@
+
+<!-- TAB BUS DEPOT-->
+<aura:component controller="BusController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="bus" type="Object" />
+    
+    <lightning:card title="{! v.bus.name}" iconName="standard:client" > 
+        <p class="slds-text-heading_small slds-m-left_medium ">            
+            Status:
+            <aura:if isTrue="{! v.bus.available }">
+                <lightning:badge  style="color:white; background:green; vertical-align:middle;" label="Available!"/>
+                <aura:set attribute="else">
+                    <lightning:badge style="color:white; background:red; vertical-align:middle;" label="In use!"/>                        
+                </aura:set>
+            </aura:if> 
+        </p>        
+    </lightning:card>
+</aura:component>

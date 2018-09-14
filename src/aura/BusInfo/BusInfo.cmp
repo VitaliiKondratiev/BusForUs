@@ -1,0 +1,75 @@
+<aura:component controller="BusLineController">
+        
+    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo"/>
+
+    <aura:attribute name="busListForEvent" type="List" />
+    <aura:attribute name="listLines" type="List" />
+    <aura:attribute name="listAvail" type="List" />
+    <aura:attribute name="currentBus" type="Object" />
+
+    <div class="slds-grid ">
+        <div class="slds-col slds-show_inline-block slds-size_1-of-3">
+            <p class="slds-text-heading_small slds-m-left_medium ">
+                Name: {! v.currentBus.name }
+            </p>
+        </div>
+        <div class="slds-col slds-show_inline-block slds-size_1-of-3">
+            <p class="slds-text-heading_small slds-m-left_medium ">
+                Status:
+                <aura:if isTrue="{! v.currentBus.available}">
+                    <lightning:badge style="color:white; background:green; vertical-align:middle;" label="Available!" />
+                    <aura:set attribute="else">
+                        <lightning:badge style="color:white; background:red; vertical-align:middle;" label="In use!" />
+                    </aura:set>
+                </aura:if>
+            </p>
+        </div>
+        <div class="slds-col slds-size_1-of-3">
+            <p class="slds-text-heading_small slds-m-left_medium">
+                Lines:
+            </p>
+            <div>
+                <aura:iteration items="{!v.currentBus.workLines}" var="line" indexVar="key">
+                    <div class="slds-grid slds-form--inline slds-m-top_x-small slds-m-right_medium">
+                        <div class="slds-box  slds-col slds-size_5-of-6">
+                            {! line.lineName}
+                        </div>
+                        <lightning:button class="slds-col slds-size_1-of-6 "
+                                          iconName="utility:delete" iconPosition="left"
+                                          variant="destructive"
+                                          value="{! key}"
+                                          onclick="{!c.removeBusRoute}" />
+
+                    </div>
+                </aura:iteration>
+                <aura:if isTrue="{! v.currentBus.isEditing}">
+                    <div class="slds-form--inline slds-m-top_x-small ">
+                        <lightning:select aura:id="chosenLine" name="select">
+                            <aura:iteration items="{!v.listAvail}" var="line">
+                                <option value="{! line.lineId}" text="{!line.lineName}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <!---confirm -->
+                        <lightning:button iconName="action:approval"
+                                          iconPosition="left"
+                                          label="Confirm"   
+                                          onclick="{! c.addNewRoute}" />
+                    </div>
+                    <lightning:button class="slds-m-top_x-small "
+                                      label="Cancel"    
+                                      title="Cancel" 
+                                      onclick="{! c.toggleViewEditFields}" />
+
+                    <aura:set attribute="else">
+                        <lightning:button aura:id="renderAvailLines" 
+                                          class="slds-m-top_x-small " 
+                                          variant="brand"
+                                          label="Add line"
+                                          title="Add line" 
+                                          onclick="{! c.toggleViewEditFields}" />
+                    </aura:set>
+                </aura:if>  
+            </div>
+        </div>
+    </div>
+</aura:component>
