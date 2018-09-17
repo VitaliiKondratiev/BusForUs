@@ -14,16 +14,21 @@
                 component.set("v.buses", response.getReturnValue()["buses"]);
             }
             else {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Error!',
-                    'type'   : 'Error',
-                    'message': response.getError()[0].message    
-
-                });
-                showToast.fire(); 
+                this.showingToasts('Error!','Error', response.getError()[0].message);
             }
         });
         $A.enqueueAction(action);
-    }
+    },
+
+    showingToasts : function(title, type, message) {
+		var showToast = $A.get("e.force:showToast");
+		if(showToast != undefined){
+			showToast.setParams({
+				'title'   : title,
+				'type'   : type,
+				'message': message
+			});
+			showToast.fire();
+		}
+	}
 })

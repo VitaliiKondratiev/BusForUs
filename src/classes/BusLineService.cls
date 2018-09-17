@@ -64,4 +64,58 @@ public  class BusLineService {
         }        
     return busLines;
     }
+
+    public static List<Bus__c> afterInsBusLine (List<Bus_Line__c> newBusLines){
+            System.debug(LoggingLevel.INFO, newBusLines);
+            String inCondition = '( ';
+            for (Bus_Line__c newBusLine : newBusLines) {
+               inCondition += '\'' + newBusLine.Bus__c+ '\' , '; 
+            }
+            inCondition = inCondition.substring(0,inCondition.length()-2) + ' )';         
+
+            List<Bus__c> buses = Database.query('SELECT Id, Available__c FROM Bus__c WHERE Id IN ' + inCondition);
+            for (Bus__c bus : buses) {
+               bus.Available__c = false;
+            }
+            System.debug(LoggingLevel.INFO, buses);
+            return buses;
+    }
+
+        public static List<Bus__c> beforeDelBusLine (List<Bus_Line__c> oldBusLines){   
+
+            System.debug(LoggingLevel.INFO, oldBusLines);
+            String inCondition = '( ';
+            for (Bus_Line__c oldBusLine : oldBusLines) {
+               inCondition += '\'' + oldBusLine.Bus__c+ '\' , '; 
+            }
+            inCondition = inCondition.substring(0,inCondition.length()-2) + ' )';         
+
+            List<Bus__c> busesForCheck = Database.query('SELECT Id, Available__c FROM Bus__c WHERE Id IN ' + inCondition + 'ORDER BY Id');
+
+            List<Bus_Line__c> allBusLines = [SELECT Bus__c FROM Bus_Line__c ORDER BY Bus__c];
+            
+            List<Bus__c> busesAvailable = new List<Bus__c> ();
+
+            integer count = 0;
+            integer getBus = 0;
+            for (Bus_Line__c busLine : allBusLines) {
+                if(getBus < busesForCheck.size()){
+                    if(busLine.Bus__c == busesForCheck.get(getBus).Id){
+                        count++;
+                    }
+                    else if( busLine.Bus__c != busesForCheck.get(getBus).Id && count !=0 ) {
+                        if(count < 2){
+                            busesForCheck.get(getBus).Available__c = true;
+                            busesAvailable.add(busesForCheck.get(getBus));
+                        }
+                        count=0;
+                        getBus++;                        
+                    } 
+                }
+                else{
+                    break;
+                }
+            }
+            return busesAvailable; 
+    }
 }

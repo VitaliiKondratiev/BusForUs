@@ -26,19 +26,15 @@
         var actionNewBus = component.get("c.insertBus");
         actionNewBus.setParams({
             "name"    : component.get("v.newName"),
-            "accOwner": component.get("v.recordId")
+            "busOwner": component.get("v.recordId")
 
         });
         actionNewBus.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Success!',
-                    'type'   : 'Success',
-                    'message': 'New bus successfully added'
-                });
-                showToast.fire();
+
+                helper.showingToasts('Success!','Success','New bus successfully added');
+
                 var appEvent = $A.get("e.c:editInfo");
                 appEvent.setParams({
                     "message": "FromBusesListToManagment"
@@ -47,15 +43,8 @@
                 appEvent.fire();
                 helper.renderBusList(component);
             }
-            else {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Error!',
-                    'type'   : 'Error',
-                    'message': response.getError()[0].message    
-
-                });
-                showToast.fire(); 
+            else { 
+                helper.showingToasts('Error!','Error',response.getError()[0].message ); 
             }
         });
         component.set("v.isOpen", false);
@@ -77,14 +66,8 @@
             actionBusRemove.setCallback(this, function (response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    var showToast = $A.get("e.force:showToast");
-                    showToast.setParams({
-                        'title'  : 'Success!',
-                        'type'   : 'Success',
-                        'message': 'Selected bus was removed'
-                    });
-                    showToast.fire();
 
+                    helper.showingToasts('Success!','Success','Selected bus was removed'); 
                     var appEvent = $A.get("e.c:editInfo");
                     appEvent.setParams({
                         "message": "FromBusesListToManagment"
@@ -95,27 +78,14 @@
                     component.set("v.buses", buses);
 
                 }
-                else {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Error!',
-                    'type'   : 'Error',
-                    'message': response.getError()[0].message    
-
-                });
-                showToast.fire(); 
+                else {               
+                helper.showingToasts('Error!','Error', response.getError()[0].message ); 
                 }
             });
             $A.enqueueAction(actionBusRemove);
         }
-        else {
-            var showToast = $A.get("e.force:showToast");
-            showToast.setParams({
-                'title'  : 'Warning!',
-                'type'   : 'Warning',
-                'message': "Removing canceled!"
-            });
-            showToast.fire();
+        else {  
+            helper.showingToasts('Warning!','Warning', 'Removing canceled!' ); 
         }
     },
 
@@ -137,13 +107,7 @@
         actionNewBus.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Success!',
-                    'type'   : 'Success',
-                    'message': 'Bus info successfully changed'
-                });
-                showToast.fire();
+                helper.showingToasts('Success!','Success', 'Bus info successfully changed' );
                 var appEvent = $A.get("e.c:editInfo");
                 appEvent.setParams({
                     "message": "FromBusesListToManagment"
@@ -153,17 +117,9 @@
                 helper.renderBusList(component);
             }
             else {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Error!',
-                    'type'   : 'Error',
-                    'message': response.getError()[0].message    
-
-                });
-                showToast.fire(); 
+                helper.showingToasts('Error!','Error', response.getError()[0].message );
             }
         });
-        component.set("v.isOpen", false);
         $A.enqueueAction(actionNewBus);
     },
 

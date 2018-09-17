@@ -1,9 +1,7 @@
 ({
     toggleViewEditFields: function (component, event, helper) {
 
-        var bus       = component.get('v.currentBus');
-        bus.isEditing = !bus.isEditing;
-        component.set('v.currentBus', bus);
+        component.set('v.currentBus.isEditing', !component.get('v.currentBus.isEditing'));
 
         if (event.getSource().getLocalId() == "renderAvailLines") {
             var notAvLines = component.get("v.currentBus.workLines");
@@ -17,12 +15,18 @@
     },
 
     addNewRoute: function (component, event, helper) {
+       debugger
         var actionSetRoute = component.get("c.insertRoute");
-        var newId          = component.find("chosenLine").get("v.value");
-
-        var newName        = component.get("v.listLines").filter(item => {
+        var newId;
+        if(Array.isArray(component.find("chosenLine"))){
+            newId = component.find("chosenLine")[0].get("v.value");
+        }
+        else{
+            newId = component.find("chosenLine").get("v.value");
+        }
+        var newName        = component.get("v.listLines").find(item => {
             return item.lineId === newId;
-        })[0].lineName;
+        }).lineName;
 
         actionSetRoute.setParams({
             "busHalf" : component.get("v.currentBus.busId"),
@@ -46,27 +50,12 @@
                 var appEvent = $A.get("e.c:editInfo");
                 appEvent.setParams({
                     "message": "FromBusInfoToList"
-                });
-                
+                });                
                 appEvent.fire();
-
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'   : 'Success!',
-                    'type'   : 'Success',
-                    'message': 'New route successfully added'
-                });
-                showToast.fire();
+                helper.showingToasts('Success!','Success','New route successfully added');
             }
             else {
-                var showToast = $A.get("e.force:showToast");
-                showToast.setParams({
-                    'title'  : 'Error!',
-                    'type'   : 'Error',
-                    'message': response.getError()[0].message
-
-                });
-                showToast.fire();
+                helper.showingToasts('Error!','Error', response.getError()[0].message);
             }
         });
         var bus       = component.get('v.currentBus');
@@ -108,38 +97,18 @@
                         "message": "FromBusInfoToList"
                     });
                     appEvent.fire();
-
-                    var showToast = $A.get("e.force:showToast");
-                    showToast.setParams({
-                        'title'  : 'Success!',
-                        'type'   : 'Success',
-                        'message': 'Route successfully delited'
-                    });
-                    showToast.fire();
+                    helper.showingToasts('Success!','Success','Route successfully delited');
 
                 }
                 else {
-                    var showToast = $A.get("e.force:showToast");
-                    showToast.setParams({
-                        'title'  : 'Error!',
-                        'type'   : 'Error',
-                        'message': response.getError()[0].message
-
-                    });
-                    showToast.fire();
+                    helper.showingToasts('Error!','Error', response.getError()[0].message);
                 }
             });
             $A.enqueueAction(actionDelRoute);
 
         }
         else {
-            var showToast = $A.get("e.force:showToast");
-            showToast.setParams({
-                'title'  : 'Warning!',
-                'type'   : 'Warning',
-                'message': "Removing canceled!"
-            });
-            showToast.fire();
+            helper.showingToasts('Warning!','Warning', 'Removing canceled!');
         }
     }
 

@@ -1,4 +1,3 @@
-
 <!-- TAB BUS DEPOT-->
 <aura:component controller="BusController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global" >
     
