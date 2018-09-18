@@ -1,11 +1,11 @@
 <aura:component controller="BusLineController">
         
-    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo"/>
-
     <aura:attribute name="busListForEvent" type="List" />
     <aura:attribute name="listLines" type="List" />
     <aura:attribute name="listAvail" type="List" />
     <aura:attribute name="currentBus" type="Object" />
+    
+    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo"/>
 
     <div class="slds-grid ">
         <div class="slds-col slds-show_inline-block slds-size_1-of-3">

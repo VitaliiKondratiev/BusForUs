@@ -1,7 +1,5 @@
 <aura:component controller="BusController" implements="flexipage:availableForRecordHome,force:hasRecordId" access="global">
 
-    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo" />
-
     <aura:attribute name="buses" type="List" />
     <aura:attribute name="recordId" type="String" />
     <aura:attribute name="availableSearch" type="Boolean" />
@@ -9,6 +7,8 @@
     <aura:attribute name="isOpen" type="boolean" default="false" />
     <aura:attribute name="newName" type="String" />
 
+    <aura:registerEvent name="eventOfChangeInfo" type="c:editInfo" />
+    
     <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
     <aura:handler event="c:editInfo" action="{!c.handleEditInfoEvent}" />
 
